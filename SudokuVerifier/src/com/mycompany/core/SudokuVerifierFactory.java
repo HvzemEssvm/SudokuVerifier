@@ -8,7 +8,7 @@ package com.mycompany.core;
  *
  * @author Hazem
  */
-public class SudokoVerifierFactory {
+public class SudokuVerifierFactory {
     public static final int MODE_SEQUENTIAL = 0;
     public static final int MODE_THREE_THREADED = 3;
     public static final int MODE_TWENTY_SEVEN_THREADED=27;
@@ -24,7 +24,7 @@ public class SudokoVerifierFactory {
                     +          "                   \t      9 cols, and 9 boxes which sum up \n\t"
                     +          "                   \t      to 27 threads.";
     
-    public static SudokoVerifier createVerifier(String fileName,int mode)
+    public static SudokuVerifier createVerifier(String fileName,int mode)
     {
        switch(mode)
        {
