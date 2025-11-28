@@ -4,6 +4,13 @@
  */
 package com.mycompany.core;
 
+import java.io.IOException;
+
+import com.mycompany.modes.SudokuVerifierSquential;
+import com.mycompany.modes.SudokuVerifierThreeThreaded;
+import com.mycompany.modes.SudokuVerifierTwentySevenThreaded;
+import com.mycompany.util.CSVReader;
+
 /**
  *
  * @author Hazem
@@ -13,8 +20,7 @@ public class SudokuVerifierFactory {
     public static final int MODE_SEQUENTIAL = 0;
     public static final int MODE_THREE_THREADED = 3;
     public static final int MODE_TWENTY_SEVEN_THREADED = 27;
-    public static final String MODE_DESCRIPTION
-            = "    <mode>         \t* 0: means one thread (main thread) in other wo-\n\t"
+    public static final String MODE_DESCRIPTION = "    <mode>         \t* 0: means one thread (main thread) in other wo-\n\t"
             + "                   \t     rds a regular sequential program.\n\n\t"
             + "                   \t* 3: means four threads, three added to the main\n\t"
             + "                   \t     one per each type: one for rows,one for\n\t"
@@ -25,17 +31,18 @@ public class SudokuVerifierFactory {
             + "                   \t      9 cols, and 9 boxes which sum up \n\t"
             + "                   \t      to 27 threads.";
 
-    public static SudokuVerifier createVerifier(String fileName, int mode) {
+    public static SudokuVerifier createVerifier(String fileName, int mode) throws IOException {
+        CSVReader.SudokuData data = CSVReader.readCSV(fileName);
+
         switch (mode) {
             case MODE_SEQUENTIAL:
-                break;
+                return new SudokuVerifierSquential(data.rows, data.columns, data.boxes);
             case MODE_THREE_THREADED:
-                break;
+                return new SudokuVerifierThreeThreaded(data.rows, data.columns, data.boxes);
             case MODE_TWENTY_SEVEN_THREADED:
-                break;
+                return new SudokuVerifierTwentySevenThreaded(data.rows, data.columns, data.boxes);
             default:
                 throw new IllegalArgumentException("Error: Unkown mode --> " + mode + "?!");
         }
-        return null;
     }
 }

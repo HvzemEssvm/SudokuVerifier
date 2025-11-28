@@ -71,7 +71,7 @@ public class SudokuVerifierThreeThreaded extends SudokuVerifier {
     }
 
     @Override
-    protected void verifyRow(ArrayList<Integer> row, int rowIndex) {
+    protected synchronized void verifyRow(ArrayList<Integer> row, int rowIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
         for (int i = 0; i < row.size(); i++) {
@@ -80,23 +80,21 @@ public class SudokuVerifierThreeThreaded extends SudokuVerifier {
             valuePositions.get(value).add(i + 1);
         }
 
-        synchronized (rowDuplicates) {
-            for (int value : valuePositions.keySet()) {
-                ArrayList<Integer> positions = valuePositions.get(value);
-                if (positions.size() > 1) {
-                    Duplicate dup = new Duplicate(
-                            Duplicate.Type.ROW,
-                            rowIndex + 1,
-                            value,
-                            positions);
-                    rowDuplicates.add(dup);
-                }
+        for (int value : valuePositions.keySet()) {
+            ArrayList<Integer> positions = valuePositions.get(value);
+            if (positions.size() > 1) {
+                Duplicate dup = new Duplicate(
+                        Duplicate.Type.ROW,
+                        rowIndex + 1,
+                        value,
+                        positions);
+                rowDuplicates.add(dup);
             }
         }
     }
 
     @Override
-    protected void verifyColumn(ArrayList<Integer> column, int colIndex) {
+    protected synchronized void verifyColumn(ArrayList<Integer> column, int colIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
         for (int i = 0; i < column.size(); i++) {
@@ -105,23 +103,21 @@ public class SudokuVerifierThreeThreaded extends SudokuVerifier {
             valuePositions.get(value).add(i + 1);
         }
 
-        synchronized (columnDuplicates) {
-            for (int value : valuePositions.keySet()) {
-                ArrayList<Integer> positions = valuePositions.get(value);
-                if (positions.size() > 1) {
-                    Duplicate dup = new Duplicate(
-                            Duplicate.Type.COL,
-                            colIndex + 1,
-                            value,
-                            positions);
-                    columnDuplicates.add(dup);
-                }
+        for (int value : valuePositions.keySet()) {
+            ArrayList<Integer> positions = valuePositions.get(value);
+            if (positions.size() > 1) {
+                Duplicate dup = new Duplicate(
+                        Duplicate.Type.COL,
+                        colIndex + 1,
+                        value,
+                        positions);
+                columnDuplicates.add(dup);
             }
         }
     }
 
     @Override
-    protected void verifyBox(ArrayList<Integer> box, int boxIndex) {
+    protected synchronized void verifyBox(ArrayList<Integer> box, int boxIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
         for (int i = 0; i < box.size(); i++) {
@@ -130,17 +126,15 @@ public class SudokuVerifierThreeThreaded extends SudokuVerifier {
             valuePositions.get(value).add(i + 1);
         }
 
-        synchronized (boxDuplicates) {
-            for (int value : valuePositions.keySet()) {
-                ArrayList<Integer> positions = valuePositions.get(value);
-                if (positions.size() > 1) {
-                    Duplicate dup = new Duplicate(
-                            Duplicate.Type.BOX,
-                            boxIndex + 1,
-                            value,
-                            positions);
-                    boxDuplicates.add(dup);
-                }
+        for (int value : valuePositions.keySet()) {
+            ArrayList<Integer> positions = valuePositions.get(value);
+            if (positions.size() > 1) {
+                Duplicate dup = new Duplicate(
+                        Duplicate.Type.BOX,
+                        boxIndex + 1,
+                        value,
+                        positions);
+                boxDuplicates.add(dup);
             }
         }
     }
