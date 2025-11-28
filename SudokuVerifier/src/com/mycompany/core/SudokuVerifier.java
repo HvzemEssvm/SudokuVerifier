@@ -11,7 +11,7 @@ import java.util.Collections;
  *
  * @author Hazem
  */
-public abstract class SudokoVerifier {
+public abstract class SudokuVerifier {
 
     protected ArrayList<ArrayList<Integer>> rows;
     protected ArrayList<ArrayList<Integer>> columns;
@@ -20,7 +20,7 @@ public abstract class SudokoVerifier {
     protected ArrayList<Duplicate> columnDuplicates;
     protected ArrayList<Duplicate> boxDuplicates;
 
-    public SudokoVerifier(ArrayList<ArrayList<Integer>> rows,
+    public SudokuVerifier(ArrayList<ArrayList<Integer>> rows,
             ArrayList<ArrayList<Integer>> columns,
             ArrayList<ArrayList<Integer>> boxes) {
         this.rows = rows;

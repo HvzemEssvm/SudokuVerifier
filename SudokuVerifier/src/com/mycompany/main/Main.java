@@ -4,8 +4,8 @@
  */
 package com.mycompany.main;
 
-import com.mycompany.core.SudokoVerifier;
-import com.mycompany.core.SudokoVerifierFactory;
+import com.mycompany.core.SudokuVerifier;
+import com.mycompany.core.SudokuVerifierFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -23,7 +23,7 @@ public class Main {
                     +          "    java -jar SudokoVerifier.jar <.csv filePath> <mode>\n\n\t"
                     +          "    <.csv filePath>\tFull-Path/Relative-Path for csv file containting\n\t"
                     +          "                   \ta 9x9 sudoko solution to be validated\n\n\t"
-                    +          SudokoVerifierFactory.MODE_DESCRIPTION);
+                    +          SudokuVerifierFactory.MODE_DESCRIPTION);
         }
         if(args.length!=2)
         {
@@ -45,7 +45,7 @@ public class Main {
         try
         {
             validateArgs(args);
-            SudokoVerifier verifier = SudokoVerifierFactory.createVerifier(args[0],Integer.parseInt(args[1]));
+            SudokuVerifier verifier = SudokuVerifierFactory.createVerifier(args[0],Integer.parseInt(args[1]));
             System.out.println(verifier.toString());
         }
         catch(Exception e)
