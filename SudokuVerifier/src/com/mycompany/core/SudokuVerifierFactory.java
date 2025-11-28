@@ -36,5 +36,6 @@ public class SudokuVerifierFactory {
             default:
                 throw new IllegalArgumentException("Error: Unkown mode --> " + mode + "?!");
         }
+        return null;
     }
 }

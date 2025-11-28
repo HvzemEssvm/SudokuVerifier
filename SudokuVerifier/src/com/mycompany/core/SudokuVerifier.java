@@ -144,9 +144,9 @@ public abstract class SudokuVerifier {
 
     protected abstract void verifyBoxes();
 
-    protected abstract void verifyRow(ArrayList<Integer> row);
+    protected abstract void verifyRow(ArrayList<Integer> row, int rowIndex);
 
-    protected abstract void verifyColumn(ArrayList<Integer> column);
+    protected abstract void verifyColumn(ArrayList<Integer> column, int columnIndex);
 
-    protected abstract void verifyBox(ArrayList<Integer> box);
+    protected abstract void verifyBox(ArrayList<Integer> box, int boxIndex);
 }
