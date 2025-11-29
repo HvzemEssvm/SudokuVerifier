@@ -96,7 +96,7 @@ public abstract class SudokuVerifier {
                     .append(typeIdx)
                     .append(", #")
                     .append(value);
-            str.append("[");
+            str.append(", [");
             if (!duplicatesIdx.isEmpty()) {
                 str.append(duplicatesIdx.get(0));
                 for (int i = 1; i < duplicatesIdx.size(); i++) {
