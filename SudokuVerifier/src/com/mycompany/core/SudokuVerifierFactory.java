@@ -32,15 +32,15 @@ public class SudokuVerifierFactory {
             + "                   \t      to 27 threads.";
 
     public static SudokuVerifier createVerifier(String fileName, int mode) throws IOException {
-        CSVReader.SudokuData data = CSVReader.readCSV(fileName);
+        SudokuData data = CSVReader.readCSV(fileName);
 
         switch (mode) {
             case MODE_SEQUENTIAL:
-                return new SudokuVerifierSquential(data.rows, data.columns, data.boxes);
+                return new SudokuVerifierSquential(data);
             case MODE_THREE_THREADED:
-                return new SudokuVerifierThreeThreaded(data.rows, data.columns, data.boxes);
+                return new SudokuVerifierThreeThreaded(data);
             case MODE_TWENTY_SEVEN_THREADED:
-                return new SudokuVerifierTwentySevenThreaded(data.rows, data.columns, data.boxes);
+                return new SudokuVerifierTwentySevenThreaded(data);
             default:
                 throw new IllegalArgumentException("Error: Unkown mode --> " + mode + "?!");
         }

@@ -4,19 +4,14 @@
  */
 package com.mycompany.modes;
 
+import com.mycompany.core.SudokuData;
 import com.mycompany.core.SudokuVerifier;
 import java.util.ArrayList;
 
 public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
 
-    public SudokuVerifierTwentySevenThreaded(ArrayList<ArrayList<Integer>> rows,
-            ArrayList<ArrayList<Integer>> columns,
-            ArrayList<ArrayList<Integer>> boxes) {
-        super(rows, columns, boxes);
-        this.rowDuplicates = new ArrayList<>();
-        this.columnDuplicates = new ArrayList<>();
-        this.boxDuplicates = new ArrayList<>();
-
+    public SudokuVerifierTwentySevenThreaded(SudokuData data) {
+        super(data);
         verify();
     }
 
@@ -29,21 +24,21 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
         
         for (int i = 0; i < 9; i++) {
             final int rowIndex = i;
-            Thread rowThread = new Thread(() -> verifyRow(rows.get(rowIndex), rowIndex));
+            Thread rowThread = new Thread(() -> verifyRow(data.getRows().get(rowIndex), rowIndex));
             threads.add(rowThread);
             rowThread.start();
         }
 
         for (int i = 0; i < 9; i++) {
             final int colIndex = i;
-            Thread colThread = new Thread(() -> verifyColumn(columns.get(colIndex), colIndex));
+            Thread colThread = new Thread(() -> verifyColumn(data.getColumns().get(colIndex), colIndex));
             threads.add(colThread);
             colThread.start();
         }
 
         for (int i = 0; i < 9; i++) {
             final int boxIndex = i;
-            Thread boxThread = new Thread(() -> verifyBox(boxes.get(boxIndex), boxIndex));
+            Thread boxThread = new Thread(() -> verifyBox(data.getBoxes().get(boxIndex), boxIndex));
             threads.add(boxThread);
             boxThread.start();
         }
@@ -56,17 +51,5 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
                 throw new RuntimeException("Thread interrupted during verification", e);
             }
         }
-    }
-    
-    @Override
-    protected void verifyRows() {
-    }
-
-    @Override
-    protected void verifyColumns() {
-    }
-
-    @Override
-    protected void verifyBoxes() {
     }
 }

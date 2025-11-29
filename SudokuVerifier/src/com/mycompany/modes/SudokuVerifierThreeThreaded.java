@@ -4,20 +4,14 @@
  */
 package com.mycompany.modes;
 
+import com.mycompany.core.SudokuData;
 import com.mycompany.core.SudokuVerifier;
-import java.util.ArrayList;
 
 public class SudokuVerifierThreeThreaded extends SudokuVerifier {
 
-    public SudokuVerifierThreeThreaded(ArrayList<ArrayList<Integer>> rows,
-            ArrayList<ArrayList<Integer>> columns,
-            ArrayList<ArrayList<Integer>> boxes) {
-        super(rows, columns, boxes);
-        this.rowDuplicates = new ArrayList<>();
-        this.columnDuplicates = new ArrayList<>();
-        this.boxDuplicates = new ArrayList<>();
-
-        verify();
+    public SudokuVerifierThreeThreaded(SudokuData data) {
+        super(data);
+        verify();//ignore warning
     }
 
     @Override

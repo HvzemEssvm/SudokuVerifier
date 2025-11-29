@@ -14,19 +14,13 @@ import java.util.HashMap;
  */
 public abstract class SudokuVerifier {
 
-    protected ArrayList<ArrayList<Integer>> rows;
-    protected ArrayList<ArrayList<Integer>> columns;
-    protected ArrayList<ArrayList<Integer>> boxes;
+    protected SudokuData data;
     protected ArrayList<Duplicate> rowDuplicates;
     protected ArrayList<Duplicate> columnDuplicates;
     protected ArrayList<Duplicate> boxDuplicates;
 
-    public SudokuVerifier(ArrayList<ArrayList<Integer>> rows,
-            ArrayList<ArrayList<Integer>> columns,
-            ArrayList<ArrayList<Integer>> boxes) {
-        this.rows = rows;
-        this.columns = columns;
-        this.boxes = boxes;
+    public SudokuVerifier(SudokuData data) {
+        this.data = data;
         
         this.rowDuplicates = new ArrayList();
         this.columnDuplicates = new ArrayList();
@@ -145,20 +139,20 @@ public abstract class SudokuVerifier {
     protected abstract void verify();
 
     protected synchronized void verifyRows() {
-        for (int i = 0; i < rows.size(); i++) {
-            verifyRow(rows.get(i), i);
+        for (int i = 0; i < data.getRows().size(); i++) {
+            verifyRow(data.getRows().get(i), i);
         }
     }
 
     protected synchronized void verifyColumns() {
-        for (int i = 0; i < columns.size(); i++) {
-            verifyColumn(columns.get(i), i);
+        for (int i = 0; i < data.getColumns().size(); i++) {
+            verifyColumn(data.getColumns().get(i), i);
         }
     }
 
     protected synchronized void verifyBoxes() {
-        for (int i = 0; i < boxes.size(); i++) {
-            verifyBox(boxes.get(i), i);
+        for (int i = 0; i < data.getBoxes().size(); i++) {
+            verifyBox(data.getBoxes().get(i), i);
         }
     }
 
