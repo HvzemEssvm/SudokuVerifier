@@ -17,7 +17,6 @@ public class SudokuVerifierSquential extends SudokuVerifier {
     public SudokuVerifierSquential(ArrayList<ArrayList<Integer>> rows, ArrayList<ArrayList<Integer>> columns,
             ArrayList<ArrayList<Integer>> boxes) {
         super(rows, columns, boxes);
-        //TODO Auto-generated constructor stub
     }
 
     @Override

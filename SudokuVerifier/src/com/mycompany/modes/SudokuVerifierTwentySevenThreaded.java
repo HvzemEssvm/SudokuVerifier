@@ -6,7 +6,6 @@ package com.mycompany.modes;
 
 import com.mycompany.core.SudokuVerifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
 
@@ -18,14 +17,16 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
         this.columnDuplicates = new ArrayList<>();
         this.boxDuplicates = new ArrayList<>();
 
-        propagate();
+        verify();
     }
 
     @Override
-    protected void propagate() {
+    /**
+     * @see https://www.geeksforgeeks.org/java/lambda-expressions-java-8/
+     */
+    protected void verify() {
         ArrayList<Thread> threads = new ArrayList<>();
-
-        // Create 9 threads for rows
+        
         for (int i = 0; i < 9; i++) {
             final int rowIndex = i;
             Thread rowThread = new Thread(() -> verifyRow(rows.get(rowIndex), rowIndex));
@@ -33,7 +34,6 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
             rowThread.start();
         }
 
-        // Create 9 threads for columns
         for (int i = 0; i < 9; i++) {
             final int colIndex = i;
             Thread colThread = new Thread(() -> verifyColumn(columns.get(colIndex), colIndex));
@@ -41,7 +41,6 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
             colThread.start();
         }
 
-        // Create 9 threads for boxes
         for (int i = 0; i < 9; i++) {
             final int boxIndex = i;
             Thread boxThread = new Thread(() -> verifyBox(boxes.get(boxIndex), boxIndex));
@@ -49,7 +48,6 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
             boxThread.start();
         }
 
-        // Wait for all 27 threads to complete
         for (Thread thread : threads) {
             try {
                 thread.join();
@@ -59,11 +57,7 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
             }
         }
     }
-
-    @Override
-    protected void verify() {
-    }
-
+    
     @Override
     protected void verifyRows() {
     }
@@ -74,74 +68,5 @@ public class SudokuVerifierTwentySevenThreaded extends SudokuVerifier {
 
     @Override
     protected void verifyBoxes() {
-    }
-
-    @Override
-    protected synchronized void verifyRow(ArrayList<Integer> row, int rowIndex) {
-        HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
-
-        for (int i = 0; i < row.size(); i++) {
-            int value = row.get(i);
-            valuePositions.putIfAbsent(value, new ArrayList<>());
-            valuePositions.get(value).add(i + 1);
-        }
-
-        for (int value : valuePositions.keySet()) {
-            ArrayList<Integer> positions = valuePositions.get(value);
-            if (positions.size() > 1) {
-                Duplicate dup = new Duplicate(
-                        Duplicate.Type.ROW,
-                        rowIndex + 1,
-                        value,
-                        positions);
-                rowDuplicates.add(dup);
-            }
-        }
-    }
-
-    @Override
-    protected synchronized void verifyColumn(ArrayList<Integer> column, int colIndex) {
-        HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
-
-        for (int i = 0; i < column.size(); i++) {
-            int value = column.get(i);
-            valuePositions.putIfAbsent(value, new ArrayList<>());
-            valuePositions.get(value).add(i + 1);
-        }
-
-        for (int value : valuePositions.keySet()) {
-            ArrayList<Integer> positions = valuePositions.get(value);
-            if (positions.size() > 1) {
-                Duplicate dup = new Duplicate(
-                        Duplicate.Type.COL,
-                        colIndex + 1,
-                        value,
-                        positions);
-                columnDuplicates.add(dup);
-            }
-        }
-    }
-
-    @Override
-    protected synchronized void verifyBox(ArrayList<Integer> box, int boxIndex) {
-        HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
-
-        for (int i = 0; i < box.size(); i++) {
-            int value = box.get(i);
-            valuePositions.putIfAbsent(value, new ArrayList<>());
-            valuePositions.get(value).add(i + 1);
-        }
-
-        for (int value : valuePositions.keySet()) {
-            ArrayList<Integer> positions = valuePositions.get(value);
-            if (positions.size() > 1) {
-                Duplicate dup = new Duplicate(
-                        Duplicate.Type.BOX,
-                        boxIndex + 1,
-                        value,
-                        positions);
-                boxDuplicates.add(dup);
-            }
-        }
     }
 }
