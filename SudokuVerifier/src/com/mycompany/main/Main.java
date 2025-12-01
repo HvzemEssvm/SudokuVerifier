@@ -42,6 +42,10 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //@For Debugging ~Start
+        long startTime = System.nanoTime();
+        //@For Debugging ~END
+        
         try
         {
             validateArgs(args);
@@ -52,6 +56,11 @@ public class Main {
         {
             System.out.println(e.getMessage());
         }
+        
+        //@For Debugging ~Start
+        long endTime = System.nanoTime();
+        System.out.println("\nTotal Duration : "+((endTime-startTime)/1000)+" us\n");
+        //@For Debugging ~END
     }
     
 }

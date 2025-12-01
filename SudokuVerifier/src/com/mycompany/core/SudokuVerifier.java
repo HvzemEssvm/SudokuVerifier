@@ -22,9 +22,9 @@ public abstract class SudokuVerifier {
     public SudokuVerifier(SudokuData data) {
         this.data = data;
         
-        this.rowDuplicates = new ArrayList();
-        this.columnDuplicates = new ArrayList();
-        this.boxDuplicates = new ArrayList();
+        this.rowDuplicates = new ArrayList<>();
+        this.columnDuplicates = new ArrayList<>();
+        this.boxDuplicates = new ArrayList<>();
     }
 
     /**
@@ -72,7 +72,7 @@ public abstract class SudokuVerifier {
         }
 
         public ArrayList<Integer> getDuplicatesIdx() {
-            return (ArrayList<Integer>) duplicatesIdx.clone();
+            return new ArrayList<>(duplicatesIdx);
         }
 
         @Override
@@ -138,25 +138,25 @@ public abstract class SudokuVerifier {
 
     protected abstract void verify();
 
-    protected synchronized void verifyRows() {
+    protected void verifyRows() {
         for (int i = 0; i < data.getRows().size(); i++) {
             verifyRow(data.getRows().get(i), i);
         }
     }
 
-    protected synchronized void verifyColumns() {
+    protected void verifyColumns() {
         for (int i = 0; i < data.getColumns().size(); i++) {
             verifyColumn(data.getColumns().get(i), i);
         }
     }
 
-    protected synchronized void verifyBoxes() {
+    protected void verifyBoxes() {
         for (int i = 0; i < data.getBoxes().size(); i++) {
             verifyBox(data.getBoxes().get(i), i);
         }
     }
 
-    protected synchronized void verifyRow(ArrayList<Integer> row, int rowIndex) {
+    protected void verifyRow(ArrayList<Integer> row, int rowIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
         for (int i = 0; i < row.size(); i++) {
@@ -178,7 +178,7 @@ public abstract class SudokuVerifier {
         }
     }
 
-    protected synchronized void verifyColumn(ArrayList<Integer> column, int colIndex) {
+    protected void verifyColumn(ArrayList<Integer> column, int colIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
         for (int i = 0; i < column.size(); i++) {
@@ -200,7 +200,7 @@ public abstract class SudokuVerifier {
         }
     }
 
-    protected synchronized void verifyBox(ArrayList<Integer> box, int boxIndex) {
+    protected void verifyBox(ArrayList<Integer> box, int boxIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
         for (int i = 0; i < box.size(); i++) {
