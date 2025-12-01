@@ -21,8 +21,17 @@ public class SudokuVerifierSquential extends SudokuVerifier {
 
     @Override
     protected void verify() {
+        //@For Debugging ~Start
+        long processingStartTime = System.nanoTime();
+        //@For Debugging ~End
+
         verifyRows();
         verifyColumns();
         verifyBoxes();
+        
+        //@For Debugging ~Start
+        long processingEndTime = System.nanoTime();
+        System.out.println("\nProcessing Time : " +((processingEndTime-processingStartTime)/1000)+" us\n");
+        //@For Debugging ~End
     }
 }
