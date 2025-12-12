@@ -4,68 +4,60 @@
  */
 package com.mycompany.app.models;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Hazem
  */
 public class SudokuData {
-        private ArrayList<ArrayList<Integer>> rows;
-        private ArrayList<ArrayList<Integer>> columns;
-        private ArrayList<ArrayList<Integer>> boxes;
+        private int[][] rows;      // 9x9 array
+        private int[][] columns;   // 9x9 array
+        private int[][] boxes;     // 9x9 array
 
         public SudokuData() {
-            rows = new ArrayList<>();
-            columns = new ArrayList<>();
-            boxes = new ArrayList<>();
-            
-            for (int i = 0; i < 9; i++) {
-                rows.add(new ArrayList<>());
-                columns.add(new ArrayList<>());
-                boxes.add(new ArrayList<>());
-            }
+            rows = new int[9][9];
+            columns = new int[9][9];
+            boxes = new int[9][9];
         }
 
     /**
      * @return the rows
      */
-    public ArrayList<ArrayList<Integer>> getRows() {
+    public int[][] getRows() {
         return rows;
     }
 
     /**
      * @param rows the rows to set
      */
-    public void setRows(ArrayList<ArrayList<Integer>> rows) {
+    public void setRows(int[][] rows) {
         this.rows = rows;
     }
 
     /**
      * @return the columns
      */
-    public ArrayList<ArrayList<Integer>> getColumns() {
+    public int[][] getColumns() {
         return columns;
     }
 
     /**
      * @param columns the columns to set
      */
-    public void setColumns(ArrayList<ArrayList<Integer>> columns) {
+    public void setColumns(int[][] columns) {
         this.columns = columns;
     }
 
     /**
      * @return the boxes
      */
-    public ArrayList<ArrayList<Integer>> getBoxes() {
+    public int[][] getBoxes() {
         return boxes;
     }
 
     /**
      * @param boxes the boxes to set
      */
-    public void setBoxes(ArrayList<ArrayList<Integer>> boxes) {
+    public void setBoxes(int[][] boxes) {
         this.boxes = boxes;
     }
 }
