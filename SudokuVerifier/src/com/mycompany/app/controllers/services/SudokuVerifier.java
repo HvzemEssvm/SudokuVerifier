@@ -147,28 +147,28 @@ public class SudokuVerifier {
     }
 
     protected void verifyRows() {
-        for (int i = 0; i < data.getRows().size(); i++) {
-            verifyRow(data.getRows().get(i), i);
+        for (int i = 0; i < data.getRows().length; i++) {
+            verifyRow(data.getRows()[i], i);
         }
     }
 
     protected void verifyColumns() {
-        for (int i = 0; i < data.getColumns().size(); i++) {
-            verifyColumn(data.getColumns().get(i), i);
+        for (int i = 0; i < data.getColumns().length; i++) {
+            verifyColumn(data.getColumns()[i], i);
         }
     }
 
     protected void verifyBoxes() {
-        for (int i = 0; i < data.getBoxes().size(); i++) {
-            verifyBox(data.getBoxes().get(i), i);
+        for (int i = 0; i < data.getBoxes().length; i++) {
+            verifyBox(data.getBoxes()[i], i);
         }
     }
 
-    protected void verifyRow(ArrayList<Integer> row, int rowIndex) {
+    protected void verifyRow(int[] row, int rowIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
-        for (int i = 0; i < row.size(); i++) {
-            int value = row.get(i);
+        for (int i = 0; i < row.length; i++) {
+            int value = row[i];
             valuePositions.putIfAbsent(value, new ArrayList<>());
             valuePositions.get(value).add(i + 1);
         }
@@ -186,11 +186,11 @@ public class SudokuVerifier {
         }
     }
 
-    protected void verifyColumn(ArrayList<Integer> column, int colIndex) {
+    protected void verifyColumn(int[] column, int colIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
-        for (int i = 0; i < column.size(); i++) {
-            int value = column.get(i);
+        for (int i = 0; i < column.length; i++) {
+            int value = column[i];
             valuePositions.putIfAbsent(value, new ArrayList<>());
             valuePositions.get(value).add(i + 1);
         }
@@ -208,11 +208,11 @@ public class SudokuVerifier {
         }
     }
 
-    protected void verifyBox(ArrayList<Integer> box, int boxIndex) {
+    protected void verifyBox(int[] box, int boxIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
-        for (int i = 0; i < box.size(); i++) {
-            int value = box.get(i);
+        for (int i = 0; i < box.length; i++) {
+            int value = box[i];
             valuePositions.putIfAbsent(value, new ArrayList<>());
             valuePositions.get(value).add(i + 1);
         }

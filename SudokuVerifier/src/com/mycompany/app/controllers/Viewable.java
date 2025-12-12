@@ -5,6 +5,7 @@ import com.mycompany.app.exceptions.NotFoundException;
 import com.mycompany.app.exceptions.SolutionInvalidException;
 import com.mycompany.app.models.Catalog;
 import com.mycompany.app.models.DifficultyEnum;
+import com.mycompany.app.models.Game;
 
 import java.io.IOException;
 

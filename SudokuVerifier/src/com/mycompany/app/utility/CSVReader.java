@@ -45,14 +45,15 @@ public class CSVReader {
                     //EOV
 
                     // Add to rows
-                    data.getRows().get(rowIndex).add(value);
+                    data.getRows()[rowIndex][colIndex] = value;
 
                     // Add to columns
-                    data.getColumns().get(colIndex).add(value);
+                    data.getColumns()[colIndex][rowIndex] = value;
 
                     // Add to boxes
                     int boxIndex = (rowIndex / 3) * 3 + (colIndex / 3);
-                    data.getBoxes().get(boxIndex).add(value);
+                    int positionInBox = (rowIndex % 3) * 3 + (colIndex % 3);
+                    data.getBoxes()[boxIndex][positionInBox] = value;
                 }
 
                 rowIndex++;
