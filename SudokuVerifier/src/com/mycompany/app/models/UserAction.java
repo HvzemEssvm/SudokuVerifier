@@ -34,6 +34,9 @@ public class UserAction {
    }
 
 
+  public int getValue() {
+      return value;
+   }
 
 
 
