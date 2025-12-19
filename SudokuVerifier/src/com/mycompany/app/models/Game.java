@@ -34,7 +34,9 @@ public class Game {
       this.difficulty = difficulty;
    }
 
- 
+   public DifficultyEnum getDifficulty() {
+      return difficulty;
+   }
 
 }
 }
