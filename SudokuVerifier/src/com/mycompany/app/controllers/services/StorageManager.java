@@ -261,6 +261,14 @@ public class StorageManager {
         }
     }
 
+        public boolean allDifficultiesHaveGames() {
+        return hasGamesInDirectory(EASY_DIR) && 
+               hasGamesInDirectory(MEDIUM_DIR) && 
+               hasGamesInDirectory(HARD_DIR);
+    }
+
+
+
 }
 
 
