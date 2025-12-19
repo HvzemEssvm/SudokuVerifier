@@ -297,7 +297,18 @@ public class StorageManager {
 
 
     
-
+    private String getDirectoryForDifficulty(DifficultyEnum difficulty) {
+        switch (difficulty) {
+            case EASY:
+                return EASY_DIR;
+            case MEDIUM:
+                return MEDIUM_DIR;
+            case HARD:
+                return HARD_DIR;
+            default:
+                throw new IllegalArgumentException("Unknown difficulty: " + difficulty);
+        }
+    }
 
 
 }
