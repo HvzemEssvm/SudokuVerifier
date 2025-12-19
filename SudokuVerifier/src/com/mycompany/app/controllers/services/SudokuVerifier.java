@@ -2,29 +2,65 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.core;
+package com.mycompany.app.controllers.services;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import com.mycompany.app.models.SudokuData;
+
 /**
  *
  * @author Hazem
  */
-public abstract class SudokuVerifier {
+public class SudokuVerifier {
 
     protected SudokuData data;
     protected ArrayList<Duplicate> rowDuplicates;
     protected ArrayList<Duplicate> columnDuplicates;
     protected ArrayList<Duplicate> boxDuplicates;
+    private State state;
 
-    public SudokuVerifier(SudokuData data) {
-        this.data = data;
-        
-        this.rowDuplicates = new ArrayList();
-        this.columnDuplicates = new ArrayList();
-        this.boxDuplicates = new ArrayList();
+
+    public SudokuVerifier(int[][] board) {
+
+        this.data = convertToSudokuData(board);
+
+        this.rowDuplicates = new ArrayList<>();
+        this.columnDuplicates = new ArrayList<>();
+        this.boxDuplicates = new ArrayList<>();
+
+        verify();
+
+    }
+
+    private SudokuData convertToSudokuData(int[][] board) {
+        SudokuData data = new SudokuData();
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                int value = board[row][col];
+                data.getRows()[row][col] = value;
+                data.getColumns()[col][row] = value;
+                int boxIndex = (row / 3) * 3 + (col / 3);
+                int positionInBox = (row % 3) * 3 + (col % 3);
+                data.getBoxes()[boxIndex][positionInBox] = value;
+            }
+        }
+
+        return data;
+    }
+
+    public enum State {
+        /** Board is completely filled and has no duplicate values */
+        VALID,
+
+        /** Board has duplicate values in rows, columns, or boxes */
+        INVALID,
+
+        /** Board has empty cells (value 0) */
+        INCOMPLETE
     }
 
     /**
@@ -35,6 +71,7 @@ public abstract class SudokuVerifier {
         public static enum Type {
             ROW, COL, BOX
         };
+
         private Type type;
         private int typeIdx;
         private int value;
@@ -72,7 +109,7 @@ public abstract class SudokuVerifier {
         }
 
         public ArrayList<Integer> getDuplicatesIdx() {
-            return (ArrayList<Integer>) duplicatesIdx.clone();
+            return new ArrayList<>(duplicatesIdx);
         }
 
         @Override
@@ -109,58 +146,92 @@ public abstract class SudokuVerifier {
         }
     }
 
+
+    /**
+     * Gets the current state of the Sudoku board
+     * @return the State enum value (VALID, INVALID, or INCOMPLETE)
+     */
+    public State getState() {
+        return state;
+    }
+
+    private String duplicateMessage() {
+        StringBuilder str = new StringBuilder();
+        Collections.sort(rowDuplicates);
+        Collections.sort(columnDuplicates);
+        Collections.sort(boxDuplicates);
+        for (Duplicate duplicate : rowDuplicates) {
+            str.append(duplicate.toString());
+            str.append("\n");
+        }
+        str.append("------------------------------------------\n");
+        for (Duplicate duplicate : columnDuplicates) {
+            str.append(duplicate.toString());
+            str.append("\n");
+        }
+        str.append("------------------------------------------\n");
+        for (Duplicate duplicate : boxDuplicates) {
+            str.append(duplicate.toString());
+            str.append("\n");
+        }
+        return str.toString();
+    }
+
     @Override
     public String toString() {
-        if (rowDuplicates.isEmpty() && columnDuplicates.isEmpty() && boxDuplicates.isEmpty()) {
-            return "\nVALID";
-        } else {
-            StringBuilder str = new StringBuilder("\nINVALID\n\n");
-            Collections.sort(rowDuplicates);
-            Collections.sort(columnDuplicates);
-            Collections.sort(boxDuplicates);
-            for (Duplicate duplicate : rowDuplicates) {
-                str.append(duplicate.toString());
-                str.append("\n");
-            }
-            str.append("------------------------------------------\n");
-            for (Duplicate duplicate : columnDuplicates) {
-                str.append(duplicate.toString());
-                str.append("\n");
-            }
-            str.append("------------------------------------------\n");
-            for (Duplicate duplicate : boxDuplicates) {
-                str.append(duplicate.toString());
-                str.append("\n");
-            }
-            return str.toString();
+        switch (state) {
+            case INCOMPLETE:
+                if (rowDuplicates.isEmpty() && columnDuplicates.isEmpty() && boxDuplicates.isEmpty()) {
+                    return "\nINCOMPLETE WITH NO DUPLICATES";
+                } else {
+                    return "\nINCOMPLETE WITH DUPLICATES:\n" + duplicateMessage();
+                }
+            case INVALID:
+                return "\nINVALID\n" + duplicateMessage();
+            default:
+                return "\nVALID";
+        }
+     }
+
+    protected void verify() {
+        // Initialize state to VALID, will be changed if issues are found
+        state = State.VALID;
+        
+        verifyRows();
+        verifyColumns();
+        verifyBoxes();
+        
+        // If no duplicates found and board is complete, state remains VALID
+        // Otherwise, state has been set to INCOMPLETE or INVALID during verification
+    }
+
+    protected void verifyRows() {
+        for (int i = 0; i < data.getRows().length; i++) {
+            verifyRow(data.getRows()[i], i);
         }
     }
 
-    protected abstract void verify();
-
-    protected synchronized void verifyRows() {
-        for (int i = 0; i < data.getRows().size(); i++) {
-            verifyRow(data.getRows().get(i), i);
+    protected void verifyColumns() {
+        for (int i = 0; i < data.getColumns().length; i++) {
+            verifyColumn(data.getColumns()[i], i);
         }
     }
 
-    protected synchronized void verifyColumns() {
-        for (int i = 0; i < data.getColumns().size(); i++) {
-            verifyColumn(data.getColumns().get(i), i);
+    protected void verifyBoxes() {
+        for (int i = 0; i < data.getBoxes().length; i++) {
+            verifyBox(data.getBoxes()[i], i);
         }
     }
 
-    protected synchronized void verifyBoxes() {
-        for (int i = 0; i < data.getBoxes().size(); i++) {
-            verifyBox(data.getBoxes().get(i), i);
-        }
-    }
-
-    protected synchronized void verifyRow(ArrayList<Integer> row, int rowIndex) {
+    protected void verifyRow(int[] row, int rowIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
-        for (int i = 0; i < row.size(); i++) {
-            int value = row.get(i);
+        for (int i = 0; i < row.length; i++) {
+            int value = row[i];
+            if (value == 0) {
+                state = State.INCOMPLETE;
+                continue;
+            }
             valuePositions.putIfAbsent(value, new ArrayList<>());
             valuePositions.get(value).add(i + 1);
         }
@@ -168,6 +239,7 @@ public abstract class SudokuVerifier {
         for (int value : valuePositions.keySet()) {
             ArrayList<Integer> positions = valuePositions.get(value);
             if (positions.size() > 1) {
+                state = State.INVALID;
                 Duplicate dup = new Duplicate(
                         Duplicate.Type.ROW,
                         rowIndex + 1,
@@ -178,11 +250,15 @@ public abstract class SudokuVerifier {
         }
     }
 
-    protected synchronized void verifyColumn(ArrayList<Integer> column, int colIndex) {
+    protected void verifyColumn(int[] column, int colIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
-        for (int i = 0; i < column.size(); i++) {
-            int value = column.get(i);
+        for (int i = 0; i < column.length; i++) {
+            int value = column[i];
+            if (value == 0) {
+                state = State.INCOMPLETE;
+                continue;
+            }
             valuePositions.putIfAbsent(value, new ArrayList<>());
             valuePositions.get(value).add(i + 1);
         }
@@ -190,6 +266,7 @@ public abstract class SudokuVerifier {
         for (int value : valuePositions.keySet()) {
             ArrayList<Integer> positions = valuePositions.get(value);
             if (positions.size() > 1) {
+                state = State.INVALID;
                 Duplicate dup = new Duplicate(
                         Duplicate.Type.COL,
                         colIndex + 1,
@@ -200,11 +277,15 @@ public abstract class SudokuVerifier {
         }
     }
 
-    protected synchronized void verifyBox(ArrayList<Integer> box, int boxIndex) {
+    protected void verifyBox(int[] box, int boxIndex) {
         HashMap<Integer, ArrayList<Integer>> valuePositions = new HashMap<>();
 
-        for (int i = 0; i < box.size(); i++) {
-            int value = box.get(i);
+        for (int i = 0; i < box.length; i++) {
+            int value = box[i];
+            if (value == 0) {
+                state = State.INCOMPLETE;
+                continue;
+            }
             valuePositions.putIfAbsent(value, new ArrayList<>());
             valuePositions.get(value).add(i + 1);
         }
@@ -212,6 +293,7 @@ public abstract class SudokuVerifier {
         for (int value : valuePositions.keySet()) {
             ArrayList<Integer> positions = valuePositions.get(value);
             if (positions.size() > 1) {
+                state = State.INVALID;
                 Duplicate dup = new Duplicate(
                         Duplicate.Type.BOX,
                         boxIndex + 1,

@@ -4,8 +4,9 @@
  */
 package com.mycompany.main;
 
-import com.mycompany.core.SudokuVerifier;
-import com.mycompany.core.SudokuVerifierFactory;
+import com.mycompany.app.controllers.services.SudokuVerifier;
+import com.mycompany.app.utility.CSVReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -19,24 +20,25 @@ public class Main {
     {
         if(args.length == 1 && args[0].equals("--help"))
         {
-            throw new Exception("\nSudoko Verifier 9x9:\n\t"
-                    +          "    java -jar SudokoVerifier.jar <.csv filePath> <mode>\n\n\t"
-                    +          "    <.csv filePath>\tFull-Path/Relative-Path for csv file containting\n\t"
-                    +          "                   \ta 9x9 sudoko solution to be validated\n\n\t"
-                    +          SudokuVerifierFactory.MODE_DESCRIPTION);
+            throw new Exception("\nSudoku Verifier 9x9:\n\t"
+                    +          "    java -jar SudokuVerifier.jar <csv_file> [allowZeros]\n\n\t"
+                    +          "    <csv_file>\t\tPath to CSV file containing 9x9 Sudoku board\n\t"
+                    +          "    [allowZeros]\t\tOptional: 'true' to allow zeros (for incomplete games),\n\t"
+                    +          "                   \t'false' for strict mode (default: false)\n\n\t"
+                    +          "Examples:\n\t"
+                    +          "    java -jar SudokuVerifier.jar valid.csv\n\t"
+                    +          "    java -jar SudokuVerifier.jar incomplete.csv true");
         }
-        if(args.length!=2)
+        if(args.length < 1 || args.length > 2)
         {
-            throw new IllegalArgumentException("\nTry\n\t\tjava -jar SudokoVerifier.jar --help\nfor more help");
+            throw new IllegalArgumentException("\nTry\n\t\tjava -jar SudokuVerifier.jar --help\nfor more help");
         }
         
         File file = new File(args[0]);
         if(!file.exists())
         {
-            throw new FileNotFoundException("\""+args[0]+"\""+"doesn't exist as a CSV input file");
+            throw new FileNotFoundException("\""+args[0]+"\""+" doesn't exist as a CSV input file");
         }
-        
-        int mode = Integer.parseInt(args[1]); // to throw exception in case of non-int arg
     }
     /**
      * @param args the command line arguments
@@ -45,7 +47,17 @@ public class Main {
         try
         {
             validateArgs(args);
-            SudokuVerifier verifier = SudokuVerifierFactory.createVerifier(args[0],Integer.parseInt(args[1]));
+            
+            String csvFile = args[0];
+            boolean allowZeros = false;
+            
+            // Parse allowZeros flag if provided
+            if(args.length == 2) {
+                allowZeros = Boolean.parseBoolean(args[1]);
+            }
+            
+            int[][] board = CSVReader.readCSV(csvFile, allowZeros);
+            SudokuVerifier verifier = new SudokuVerifier(board);
             System.out.println(verifier.toString());
         }
         catch(Exception e)
