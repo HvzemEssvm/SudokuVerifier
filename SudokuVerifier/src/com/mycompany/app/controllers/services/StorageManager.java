@@ -190,14 +190,23 @@ public class StorageManager {
      * 
      * @throws IOException if clear operation fails
      */
-
+    public void clearGameLog() throws IOException {
+        File logFile = new File(GAME_LOG_FILE);
+        if (logFile.exists()) {
+            Files.delete(logFile.toPath());
+        }
+    }
     
     /**
      * Checks if at least one game exists for each difficulty level.
      * 
      * @return true if all difficulty levels have games, false otherwise
      */
-
+    public boolean allDifficultiesHaveGames() {
+        return hasGamesInDirectory(EASY_DIR) && 
+               hasGamesInDirectory(MEDIUM_DIR) && 
+               hasGamesInDirectory(HARD_DIR);
+    }
     
     /**
      * Counts the number of games available for a given difficulty.
@@ -205,7 +214,12 @@ public class StorageManager {
      * @param difficulty The difficulty level
      * @return Number of games available
      */
-
+    public int getGameCount(DifficultyEnum difficulty) {
+        String directory = getDirectoryForDifficulty(difficulty);
+        File dir = new File(directory);
+        File[] files = dir.listFiles((d, name) -> name.startsWith("game_") && name.endsWith(".csv"));
+        return (files != null) ? files.length : 0;
+    }
     
     /**
      * Deletes all games for a specific difficulty level.
@@ -213,70 +227,6 @@ public class StorageManager {
      * @param difficulty The difficulty level
      * @throws IOException if deletion fails
      */
-
-    /**
-     * Deletes all games from all difficulty directories.
-     * 
-     * @throws IOException if deletion fails
-     */
-
-    
-    // ==================== Private Helper Methods ====================
-    
-    /**
-     * Gets the directory path for a given difficulty level.
-     */
-
-    
-    /**
-     * Generates a unique filename for a game in the specified directory.
-     */
-
-    
-    /**
-     * Writes a game board to a CSV file.
-     */
-    
-    
-    /**
-     * Reads a game board from a CSV file.
-     */
-
-    
-    /**
-     * Checks if a directory contains any game files.
-     */
-    private boolean hasGamesInDirectory(String directory) {
-        File dir = new File(directory);
-        File[] files = dir.listFiles((d, name) -> name.startsWith("game_") && name.endsWith(".csv"));
-        return files != null && files.length > 0;
-    }
-
-
-
-        public void clearGameLog() throws IOException {
-        File logFile = new File(GAME_LOG_FILE);
-        if (logFile.exists()) {
-            Files.delete(logFile.toPath());
-        }
-    }
-
-        public boolean allDifficultiesHaveGames() {
-        return hasGamesInDirectory(EASY_DIR) && 
-               hasGamesInDirectory(MEDIUM_DIR) && 
-               hasGamesInDirectory(HARD_DIR);
-    }
-
-
-        public int getGameCount(DifficultyEnum difficulty) {
-        String directory = getDirectoryForDifficulty(difficulty);
-        File dir = new File(directory);
-        File[] files = dir.listFiles((d, name) -> name.startsWith("game_") && name.endsWith(".csv"));
-        return (files != null) ? files.length : 0;
-    }
-
-
-    
     public void clearGamesForDifficulty(DifficultyEnum difficulty) throws IOException {
         String directory = getDirectoryForDifficulty(difficulty);
         File dir = new File(directory);
@@ -288,15 +238,23 @@ public class StorageManager {
             }
         }
     }
-
-        public void clearAllGames() throws IOException {
+    
+    /**
+     * Deletes all games from all difficulty directories.
+     * 
+     * @throws IOException if deletion fails
+     */
+    public void clearAllGames() throws IOException {
         clearGamesForDifficulty(DifficultyEnum.EASY);
         clearGamesForDifficulty(DifficultyEnum.MEDIUM);
         clearGamesForDifficulty(DifficultyEnum.HARD);
     }
-
-
     
+    // ==================== Private Helper Methods ====================
+    
+    /**
+     * Gets the directory path for a given difficulty level.
+     */
     private String getDirectoryForDifficulty(DifficultyEnum difficulty) {
         switch (difficulty) {
             case EASY:
@@ -309,6 +267,10 @@ public class StorageManager {
                 throw new IllegalArgumentException("Unknown difficulty: " + difficulty);
         }
     }
+    
+    /**
+     * Generates a unique filename for a game in the specified directory.
+     */
     private String generateUniqueFilename(String directory) {
         File dir = new File(directory);
         File[] files = dir.listFiles((d, name) -> name.startsWith("game_") && name.endsWith(".csv"));
@@ -330,6 +292,10 @@ public class StorageManager {
         
         return "game_" + (maxNumber + 1) + ".csv";
     }
+    
+    /**
+     * Writes a game board to a CSV file.
+     */
     private void writeGameToFile(Game game, String filepath) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filepath))) {
             for (int row = 0; row < 9; row++) {
@@ -345,7 +311,11 @@ public class StorageManager {
             }
         }
     }
-        private Game readGameFromFile(String filepath) throws IOException {
+    
+    /**
+     * Reads a game board from a CSV file.
+     */
+    private Game readGameFromFile(String filepath) throws IOException {
         int[][] board = new int[9][9];
         
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
@@ -374,30 +344,13 @@ public class StorageManager {
         
         return new Game(board);
     }
-
-
-
-
-
+    
+    /**
+     * Checks if a directory contains any game files.
+     */
+    private boolean hasGamesInDirectory(String directory) {
+        File dir = new File(directory);
+        File[] files = dir.listFiles((d, name) -> name.startsWith("game_") && name.endsWith(".csv"));
+        return files != null && files.length > 0;
+    }
 }
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
