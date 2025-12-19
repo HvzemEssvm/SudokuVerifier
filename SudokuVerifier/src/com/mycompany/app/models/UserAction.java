@@ -41,6 +41,10 @@ public class UserAction {
       return previousValue;
    }
 
+   public String toLogEntry() {
+      return String.format("(%d, %d, %d, %d)", x, y, value, previousValue);
+   }
+
 
 
 
