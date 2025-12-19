@@ -12,11 +12,41 @@ package com.mycompany.app.models;
  */
 public class Game {
    int[][] board;
+   private DifficultyEnum difficulty;
 
-   public Game(int[][] board) {
+   public Game(int[][] board, DifficultyEnum difficulty) {
       // IMPORTANT: DON'T COPY THE BOARD BY VALUE
       // USE REFERENCES
       this.board = board;
+      this.difficulty = difficulty;
    }
    // Add methods and attributes if needed
+
+   public int[][] getBoard() {
+      return board;
+   }
+
+   public void setBoard(int[][] board) {
+      this.board = board;
+   }
+
+   public void setDifficulty(DifficultyEnum difficulty) {
+      this.difficulty = difficulty;
+   }
+
+   public DifficultyEnum getDifficulty() {
+      return difficulty;
+   }
+   public int countEmptyCells() {
+      int count = 0;
+      for (int i = 0; i < 9; i++) {
+         for (int j = 0; j < 9; j++) {
+            if (board[i][j] == 0)
+               count++;
+         }
+      }
+      return count;
+   
+}
+
 }
